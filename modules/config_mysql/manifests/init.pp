@@ -1,4 +1,4 @@
-class wordpress_lamp::config_mysql {
+class config_mysql {
 
   class { 'mysql::server':
     root_password     =>   'test',

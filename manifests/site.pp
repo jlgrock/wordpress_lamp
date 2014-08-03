@@ -1,7 +1,6 @@
-include wordpress_lamp::config_mysql
-include wordpress_lamp::config_apache
-# include wordpress_lamp::config_nginx
-include wordpress_lamp::config_wordpress
+package { 'wget':
+  ensure    =>  present,
+}
 
 file { '/vol':
   mode      =>  '664',
@@ -9,9 +8,10 @@ file { '/vol':
   owner     =>  'root',
   ensure    =>  directory,
   recurse   =>  false,
-  before    =>  Class['wordpress_lamp::config_mysql', 'wordpress_lamp::config_apache'],
+  before    =>  Class['config_mysql', 'config_apache'],
 }
 
-package { 'wget':
-  ensure    =>  present,
-}
+include config_mysql
+include config_apache
+# include config_nginx
+include config_wordpress

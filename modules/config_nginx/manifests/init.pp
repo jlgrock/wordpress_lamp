@@ -1,4 +1,4 @@
-class wordpresslamp::config_nginx() {
+class config_nginx() {
   include 'nginx'
 
   class { 'nginx': }

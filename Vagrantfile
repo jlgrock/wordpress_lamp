@@ -16,7 +16,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box_url   = "https://github.com/2creatives/vagrant-centos/releases/download/v6.5.3/centos65-x86_64-20140116.box"
   config.vm.host_name = "development.wordpresslamp.vm"
   # config.vm.network :hostonly, "192.168.33.10"
-  config.vm.provision :shell, :path => "install_puppet.sh"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -83,10 +82,24 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # You will need to create the manifests directory and a manifest in
   # the file default.pp in the manifests_path directory.
   #
+  config.vm.provision :shell, :path => "install_puppet.sh"
+
   config.vm.provision "puppet" do |puppet|
     puppet.manifests_path = "manifests"
     puppet.manifest_file  = "site.pp"
+    #puppet.hiera_config_path = "hiera.yaml"
+    # should change as the script goes on, but this allows the provisioning to
+    # start without error
+    if File.exist?("/etc/puppet/modules")
+    	puppet.module_path = ["modules","/etc/puppet/modules"]
+    else
+    	puppet.module_path = ["modules"]
+    end
+    puppet.options = "--verbose --debug"
   end
+
+  # Wordpress Shared Folder
+  #config.vm.share_folder "wordpress_mount", "/wordpress", "/wordpress"
 
   # Enable provisioning with chef solo, specifying a cookbooks path, roles
   # path, and data_bags path (all relative to this Vagrantfile), and adding
